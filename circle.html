@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<script>
+	var Excel;
+	Excel = new ActiveXObject("Excel.Application");	
+	Excel.Visible = false;
+	var cellVal = Excel.Workbooks.Open("D:/Users/212566672/Desktop/largeBaseCopy.xlsm").ActiveSheet;
+
+//getColor, getName, getTime functions???
+function getColor(i, j) { //Add parameters of cells to access, pass them in to determine color
+	if (i == 3) {return "green";}
+	
+	return "blue"; //Can set up if statements to return different values based on the cell content.
+} //getColor function can be eliminated by incorporating it into the inner and outer circle functions.
+
+function makeOuterCircle(r,c){
+	ctx.beginPath();
+		//ctx.fillStyle =getColor(i, j); //Opens excel here
+	ctx.fillStyle ="orange";
+	ctx.arc(r,c,75,0,2*Math.PI);
+	ctx.fill();
+	ctx.stroke();
+
+	return;
+}
+
+function makeInnerCircle(r,c){
+	ctx.beginPath();
+		//ctx.fillStyle =getColor(i, j); //Opens excel here
+	ctx.fillStyle ="blue";
+	ctx.arc(r,c,50,0,2*Math.PI);
+	ctx.fill();
+	ctx.stroke();
+
+	return;
+}
+
+function addName(i,j,r,c){
+	ctx.fillStyle = "white";
+	ctx.font = "bold 10px Arial";
+	ctx.fillText(cellVal.Cells(i,j).Value, r, c); //Text, x, y //Opens excel here
+
+	return;
+}
+
+function addTimeStamp(i,j,r,c){
+	ctx.fillStyle = "white";
+	ctx.font = "bold 10px Arial";
+	ctx.fillText(cellVal.Cells(i,j).Value, r, c+165); //Text, x, y //Opens excel here.
+
+	return;
+}
+
+function lastUpdated(){
+	ctx.fillStyle = "white";
+	ctx.font = "bold 16px Arial";
+	ctx.fillText("Last updated: " + cellVal.Cells(78,2).Value, 1200, 30); //Text, x, y
+
+	return;
+}
+
+function addStaticBox(){
+	ctx.strokeStyle = "cyan";
+	ctx.lineWidth = 7;
+	ctx.rect(850,50,500,700);
+	ctx.stroke();
+	ctx.lineWidth = 1;
+	ctx.strokeStyle = "black";
+
+	return;
+}
+
+</script>
+
+</head>
+<body>
+<script>//window.location.reload();</script>
+
+
+<canvas id="myCanvas" width="1550" height="875" style="border:4px solid black;">
+	myCanvas.fillStyle = "red";
+	myCanvas.fill();
+Your browser does not support the HTML5 canvas tag.</canvas>
+
+<script>
+
+var c = document.getElementById("myCanvas");
+c.style.backgroundColor = 'rgba(41, 23, 33, 1)';
+
+var ctx = c.getContext("2d");
+var success = "green";
+var fail = "red";
+var building = "cyan";
+var needsBuilt = "white";
+var numOfCircles = 9;
+
+//Begin static information
+addStaticBox();
+//End static information
+lastUpdated();
+
+rowCounter = 100; rowText = 50;
+for (i = 3; i > 0; i--){ //row
+	columnCounter = 100; columnText = 20;
+	for(j = 3; j > 0; j--){ //column
+		makeOuterCircle(rowCounter,columnCounter);
+		makeInnerCircle(rowCounter,columnCounter);
+		addName(i,j,rowText,columnText);
+		addTimeStamp(i,j,rowText,columnText);
+
+		columnCounter+= 255, columnText += 255;
+	}
+	rowCounter += 255, rowText += 255;
+}
+
+Excel.ActiveWorkbook.Save();
+Excel.Quit();
+Excel = null;
+</script> 
+
+</body>
+</html>
